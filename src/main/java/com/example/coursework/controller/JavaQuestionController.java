@@ -18,13 +18,13 @@ public class JavaQuestionController {
     @PostMapping("/add")
     public String addQuestion(@RequestParam String question, @RequestParam String answer) {
         javaQuestionService.addQuestion(new Question(question, answer));
-        return "Question added successfully";
+        return "Вопрос добавлен";
     }
 
     @PostMapping("/remove")
     public String removeQuestion(@RequestParam String question, @RequestParam String answer) {
         javaQuestionService.removeQuestion(new Question(question, answer));
-        return "Question removed successfully";
+        return "Вопрос удалён";
     }
 
     @GetMapping

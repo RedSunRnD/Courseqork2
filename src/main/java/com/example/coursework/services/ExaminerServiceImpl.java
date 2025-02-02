@@ -15,7 +15,7 @@ public class ExaminerServiceImpl implements ExaminerService {
     public List<Question> getQuestions(int amount) throws IllegalArgumentException {
         List<Question> allQuestions = questionService.getAllQuestions();
         if (amount > allQuestions.size()) {
-            throw new IllegalArgumentException("Requested more questions than available");
+            throw new IllegalArgumentException("Доступных вопросов меньше запрашиваемого количества");
         }
 
         Set<Question> uniqueQuestions = new HashSet<>();
