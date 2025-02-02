@@ -1,7 +1,5 @@
 package com.example.coursework.domain;
 
-import java.util.Objects;
-
 public class Question {
     private String question;
     private String answer;
@@ -15,16 +13,8 @@ public class Question {
         return question;
     }
 
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
     public String getAnswer() {
         return answer;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
     }
 
     @Override
@@ -32,6 +22,11 @@ public class Question {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Question question1 = (Question) o;
-        return Objects.equals(question, question1.question) && Objects.equals(answer, question1.answer);
+        return question.equals(question1.question) && answer.equals(question1.answer);
+    }
+
+    @Override
+    public int hashCode() {
+        return question.hashCode() + answer.hashCode();
     }
 }

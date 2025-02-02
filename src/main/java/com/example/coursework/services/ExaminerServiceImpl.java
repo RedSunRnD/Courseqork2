@@ -1,35 +1,31 @@
 package com.example.coursework.services;
 
-import com.example.coursework.CourseworkApplication;
 import com.example.coursework.domain.Question;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-@Service
 public class ExaminerServiceImpl implements ExaminerService {
-    private final CourseworkApplication.QuestionService questionService;
+    private final QuestionService questionService;
 
-    public ExaminerServiceImpl(CourseworkApplication.QuestionService questionService) {
+    public ExaminerServiceImpl(QuestionService questionService) {
         this.questionService = questionService;
     }
 
     @Override
-    public Collection<Question> getQuestions(int amount) {
-        if (amount > questionService.getAll().size()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Количество запрашиваемых вопросов больше, чем количество доступных");
+    public List<Question> getQuestions(int amount) throws IllegalArgumentException {
+        List<Question> allQuestions = questionService.getAllQuestions();
+        if (amount > allQuestions.size()) {
+            throw new IllegalArgumentException("Requested more questions than available");
         }
 
         Set<Question> uniqueQuestions = new HashSet<>();
+        Random random = new Random();
+
         while (uniqueQuestions.size() < amount) {
-            Question randomQuestion = questionService.getRandomQuestion();
+            Question randomQuestion = allQuestions.get(random.nextInt(allQuestions.size()));
             uniqueQuestions.add(randomQuestion);
         }
 
-        return uniqueQuestions;
+        return new ArrayList<>(uniqueQuestions);
     }
 }

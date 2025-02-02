@@ -1,41 +1,34 @@
 package com.example.coursework.services;
 
-import com.example.coursework.CourseworkApplication;
 import com.example.coursework.domain.Question;
-import org.springframework.stereotype.Service;
-import java.util.*;
 
-@Service
-public class JavaQuestionService implements CourseworkApplication.QuestionService {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-    private final Set<Question> questions = new HashSet<>();
-    private final Random random = new Random();
+public class JavaQuestionService implements QuestionService {
+    private final List<Question> questions = new ArrayList<>();
 
     @Override
-    public Question add(String question, String answer) {
-        Question newQuestion = new Question(question, answer);
-        questions.add(newQuestion);
-        return newQuestion;
+    public void addQuestion(Question question) {
+        questions.add(question);
     }
 
     @Override
-    public Question remove(Question question) {
+    public void removeQuestion(Question question) {
         questions.remove(question);
-        return question;
     }
 
     @Override
-    public Collection<Question> getAll() {
-        return questions;
+    public List<Question> getAllQuestions() {
+        return new ArrayList<>(questions);
     }
 
-    @Override
     public Question getRandomQuestion() {
         if (questions.isEmpty()) {
             throw new IllegalStateException("Нет доступных вопросов");
         }
-        List<Question> questionList = new ArrayList<>(questions);
-        int randomIndex = random.nextInt(questionList.size());
-        return questionList.get(randomIndex);
+        Random random = new Random();
+        return questions.get(random.nextInt(questions.size()));
     }
 }
