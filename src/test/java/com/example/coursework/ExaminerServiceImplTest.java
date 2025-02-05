@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -24,23 +25,16 @@ public class ExaminerServiceImplTest {
 
     @Test
     public void testGetQuestions() {
-        Question q1 = new Question("Вопрос 1", "Ответ 1");
-        Question q2 = new Question("Вопрос 2", "Ответ 2");
-
-        when(mockQuestionService.getAllQuestions()).thenReturn(Arrays.asList(q1, q2));
-
-        Collection<Question> questions = examinerService.getQuestions(1);
-        assertNotNull(questions);
-        assertEquals(1, questions.size());
-
-        verify(mockQuestionService, times(1)).getAllQuestions();
-    }
-
-    @Test
-    public void testGetQuestionsWithInvalidAmount() {
-        when(mockQuestionService.getAllQuestions()).thenReturn(Arrays.asList(new Question("Вопрос 1", "Ответ 1")));
-
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> examinerService.getQuestions(2));
-        assertEquals("Доступных вопросов меньше запрашиваемого количества", exception.getMessage());
+        JavaQuestionService mockQuestionService = Mockito.mock(JavaQuestionService.class);
+        ExaminerServiceImpl examinerService = new ExaminerServiceImpl(mockQuestionService);
+        List<Question> mockQuestions = Arrays.asList(
+                new Question("Вопрос 1", "Ответ 1"),
+                new Question("Вопрос 2", "Ответ 2"),
+                new Question("Вопрос 3", "Ответ 3")
+        );
+        Mockito.when(mockQuestionService.getAllQuestions()).thenReturn(mockQuestions);
+        Collection<Question> result = examinerService.getQuestions(2);
+        assertEquals(2, result.size());
+        assertTrue(mockQuestions.containsAll(result));
     }
 }

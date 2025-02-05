@@ -12,14 +12,15 @@ public class ExaminerServiceImpl implements ExaminerService {
 
     @Override
     public Collection<Question> getQuestions(int amount) throws IllegalArgumentException {
-        List<Question> allQuestions = questionService.getAllQuestions();
+        Collection<Question> allQuestions = questionService.getAllQuestions();
         if (amount > allQuestions.size()) {
             throw new IllegalArgumentException("Доступных вопросов меньше запрашиваемого количества");
         }
+        List<Question> questionsList = new ArrayList<>(allQuestions);
         Set<Question> uniqueQuestions = new HashSet<>();
         Random random = new Random();
         while (uniqueQuestions.size() < amount) {
-            Question randomQuestion = allQuestions.get(random.nextInt(allQuestions.size()));
+            Question randomQuestion = questionsList.get(random.nextInt(questionsList.size()));
             uniqueQuestions.add(randomQuestion);
         }
         return uniqueQuestions;
