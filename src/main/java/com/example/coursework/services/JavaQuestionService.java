@@ -1,7 +1,6 @@
 package com.example.coursework.services;
 
 import com.example.coursework.domain.Question;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,6 +23,7 @@ public class JavaQuestionService implements QuestionService {
         return new ArrayList<>(questions);
     }
 
+    @Override
     public Question getRandomQuestion() {
         if (questions.isEmpty()) {
             throw new IllegalStateException("Нет доступных вопросов");

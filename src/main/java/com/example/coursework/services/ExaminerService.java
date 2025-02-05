@@ -2,8 +2,8 @@ package com.example.coursework.services;
 
 import com.example.coursework.domain.Question;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface ExaminerService {
-    List<Question> getQuestions(int amount) throws IllegalArgumentException;
+    Collection<Question> getQuestions(int amount) throws IllegalArgumentException;
 }

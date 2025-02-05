@@ -1,34 +1,46 @@
-package com.example.coursework;
+package com.example.coursework.services;
 
 import com.example.coursework.domain.Question;
-import com.example.coursework.services.ExaminerService;
-import com.example.coursework.services.ExaminerServiceImpl;
-import com.example.coursework.services.JavaQuestionService;
-import com.example.coursework.services.QuestionService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class ExaminerServiceImplTest {
-    private final QuestionService mockQuestionService = new JavaQuestionService();
-    private final ExaminerService examinerService = new ExaminerServiceImpl(mockQuestionService);
 
-    @Test
-    public void testGetQuestions() {
-        mockQuestionService.addQuestion(new Question("Вопрос 1", "Ответ 2"));
-        mockQuestionService.addQuestion(new Question("Вопрос 2", "Ответ 2"));
+    private QuestionService mockQuestionService;
+    private ExaminerServiceImpl examinerService;
 
-        List<Question> questions = examinerService.getQuestions(2);
-        assertEquals(2, questions.size());
-        assertTrue(mockQuestionService.getAllQuestions().containsAll(questions));
+    @BeforeEach
+    public void setUp() {
+        mockQuestionService = Mockito.mock(QuestionService.class);
+        examinerService = new ExaminerServiceImpl(mockQuestionService);
     }
 
     @Test
-    public void testGetQuestionsThrowsException() {
-        mockQuestionService.addQuestion(new Question("Вопрос 1", "Ответ 1"));
-        assertThrows(IllegalArgumentException.class, () -> examinerService.getQuestions(3));
+    public void testGetQuestions() {
+        Question q1 = new Question("Вопрос 1", "Ответ 1");
+        Question q2 = new Question("Вопрос 2", "Ответ 2");
+
+        when(mockQuestionService.getAllQuestions()).thenReturn(Arrays.asList(q1, q2));
+
+        Collection<Question> questions = examinerService.getQuestions(1);
+        assertNotNull(questions);
+        assertEquals(1, questions.size());
+
+        verify(mockQuestionService, times(1)).getAllQuestions();
+    }
+
+    @Test
+    public void testGetQuestionsWithInvalidAmount() {
+        when(mockQuestionService.getAllQuestions()).thenReturn(Arrays.asList(new Question("Вопрос 1", "Ответ 1")));
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> examinerService.getQuestions(2));
+        assertEquals("Доступных вопросов меньше запрашиваемого количества", exception.getMessage());
     }
 }
